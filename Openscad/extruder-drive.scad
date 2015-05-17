@@ -20,14 +20,48 @@ h=sqrt(pow(dx,2)+pow(dy,2));
 echo(h);
 //NEMA17();
 
-mirror([1,0,0]) drive_block();
+
+mirror([1,0,0]){
+	translate([-1, 9, 0]) lever();
+	//drive_block();
+}
 //translate([0,0,14]) rotate([0,0,0])
 //translate([28,2,14]) rotate([0,180,0])
-//	small_gear();
+	//small_gear();
 //translate([-(filament_offset_x+filament_d/2+5.6/2-bite),drive_offset_y,15.5])
-//	large_gear();
+	//large_gear();
 
 //echo("gear sep",sqrt(pow(filament_offset_x+filament_d/2+5.6/2-bite,2)+pow(drive_offset_y,2)));
+
+module lever(){
+	difference(){
+		union(){
+			cylinder(r=3.5, h=14);
+			translate([-19, 0, 0]){
+				cube([22.5, 13, 14]);
+			}
+		}
+		//****idler****
+		translate([filament_offset_x-filament_d/2-5+1,drive_offset_y-9,5]){
+			rotate([0,0,22.5]) difference() {
+				cylinder(r=3.3*da8,h=40,center=true,$fn=8);
+				//translate([0,0,5]) cylinder(r=3.5*da8,h=0.3);
+			}
+			translate([0,0,9]) cylinder(r=3.1,h=14);
+			translate([-3.5,-2.5,2.5]) cube([12, 19,5],center=true);
+			//translate([-15,2,2.4]) union(){
+				//translate([0,0.5,0]) cube([20,19,15],center=true);
+				//translate([3,-5,-5])cube([16,12,5.2],center=true); // Added by AB
+				//translate([-10,-8,0]) cylinder(r=20,h=15,center=true);
+			//}
+		}
+		translate([0, 0, -1])
+			cylinder(r=1.5, h=20);
+	}
+	translate([-14, -2, 7]) rotate([-90, 0, 0]){
+		cylinder(r=2, h=2);
+	}
+}
 
 module drive_block(){
 	difference(){
@@ -49,7 +83,7 @@ module drive_block(){
                 translate([-5,8,0]) cube([27,16,17]);
 		}
 		//****idler****
-		translate([filament_offset_x-filament_d/2-5,drive_offset_y,5]){
+		/*translate([filament_offset_x-filament_d/2-5,drive_offset_y,5]){
 			cylinder(r=5.5,h=5);
 			rotate([0,0,22.5]) difference() {
 				cylinder(r=3.3*da8,h=40,center=true,$fn=8);
@@ -60,11 +94,29 @@ module drive_block(){
 			translate([-15,2,2.4]) union(){
 				translate([0,0.5,0]) cube([20,19,15],center=true);
 				//translate([3,-5,-5])cube([16,12,5.2],center=true); // Added by AB
-				translate([-10,-8,0]) cylinder(r=20,h=15,center=true);
+				//translate([-10,-8,0]) cylinder(r=20,h=15,center=true);
 			}
-		}
+		}*/
 		translate([filament_offset_x-0.5-3,0,-0.1]) cube([1,30,20]);
 		
+		translate([filament_offset_x-filament_d/2-4,drive_offset_y,5]){
+			cylinder(r=5.5,h=5);
+		}
+		
+		translate([-1, 9, -1]){
+			cylinder(r=1.5, h=20);
+			translate([0, 0, 15]){
+				cylinder(r=2.6, h=5);
+			}
+			translate([-23, 2.3, 0])
+				cube([27, 18, 20]);
+			translate([-23, -4.5, 10.7])
+				cube([27, 17, 10]);
+			translate([-23, -4.5, 0])
+				cube([27, 17, 6.3]);
+			translate([-23, -7, 0])
+				cube([15, 15, 20]);
+		}
 
 		//****drive****
 		translate([filament_offset_x+filament_d/2+5.6/2-bite,drive_offset_y,2.5]){
@@ -122,13 +174,15 @@ module drive_block(){
 			}
 		//****carriage mount holes****
 		translate([2,0,0]) for(i=[1,-1]){
-			rotate([90,0,0]) translate([filament_offset_x+i*16+1.5,7.5,5])
-			{
-        translate([0,0,-8]) rotate([0,0,22.5]) cylinder(r=3.3*da8,h=30,$fn=8);
+			rotate([90,0,0]) translate([filament_offset_x+i*16+1.5,7.5,5]){
+				translate([0,0,-8]) rotate([0,0,22.5]) cylinder(r=3.3*da8,h=30,$fn=8);
 				rotate([0,0,30]) cylinder(r=5.8/sqrt(3),h=3,$fn=6);
 				translate([-5.8/2,0,0]) cube([5.8,10,3]);
 			}
 		}
+	}
+	translate([-15, 2, 7]) rotate([-90, 0, 0]){
+		cylinder(r=2, h=2);
 	}
 }
 module insert(){
